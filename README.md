@@ -6,10 +6,13 @@ Sparkify, a startup wants to analyze the data they've been collecting on songs a
 
 
 ## Schema and ETL pipeline
-State and justify your database schema design and ETL pipeline.
+### Schema
+From the requirements, this was an Online Analytical Processing (OLAP) problem. A Star schema was used as it will make it rather simple to optimize queries on song play analysis.
+
+All the tables have a primary key except time as the timestamp is not unique. The timestamp in the time dimension table was split into day, hour, week, month, year, and weekday. This was done to make it easier to query the table. 
+
 
 ### Fact Table
-
 #### Songsplays
 records in log data associated with song plays i.e. records with page NextSong  
 
@@ -62,8 +65,11 @@ level varchar CHECK (level IN ('free','paid')
 7. year int,
 8. weekday int
 
+### ETL pipeline
+The data is contained in two datasets, song and log. the song dataset is a subset of the [Million Song Datase](http://millionsongdataset.com/). From Udacity:
+>Each file is in JSON format and contains metadata about a song and the artist of that song. The files are partitioned by the first three letters of each song's track ID.
 
-From the requirements, this was an Online Analytical Processing (OLAP) problem. A Star schema was used as it will make it rather simple to optimize queries on song play analysis.
+The log dataset contains files in JSON format generated using an event simulator based on the songs in the songs dataset
 
-All the tables have a primary key except time as the timestamp is not unique. The timestamp in the time dimension table was split into day, hour, week, month, year ,and weekday. This was done to make it easier to query the table. 
-
+## How to run the project
+First, run create_tables.py to create/reset tables each time you run this notebook. Then run etl.py to insert records into the tables. test.ipynb can be used to confirm your records were successfully inserted into each table
