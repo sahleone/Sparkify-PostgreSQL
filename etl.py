@@ -4,6 +4,7 @@ import psycopg2
 import pandas as pd
 from sql_queries import *
 import numpy as np
+import datetime
 
 def process_song_file(cur, filepath):
     """
@@ -44,10 +45,11 @@ def process_log_file(cur, filepath):
     df = df.loc[df['page'] == 'NextSong',:]
 
     # convert timestamp column to datetime
-    t = pd.to_datetime(df['ts'],unit = 'ms')
+    df['ts'] = df['ts'].apply(lambda ts: datetime.datetime.fromtimestamp(ts/1000.0))
+    t = df['ts']
     
     # insert time data records
-    time_data = (t.dt.time, t.dt.hour,t.dt.day,t.dt.week,t.dt.month,t.dt.year,t.dt.dayofweek)
+    time_data = (t.dt.time, t.dt.hour,t.dt.day,t.dt.week,t.dt.month,t.dt.year,t.dt.weekday_name)
     column_labels = ('start_time', 'hour', 'day', 'week', 'month', 'year', 'weekday')
     time_df = pd.DataFrame(dict(zip(column_labels,time_data)))
     
